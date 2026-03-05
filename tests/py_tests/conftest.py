@@ -86,15 +86,19 @@ def test_posts(test_user, setup_database):
         "content": "3rd content",
         "owner_id": test_user['id']
     }]
+    posts = []
     with setup_database.connection() as conn:
         with conn.cursor() as cursor:
             for post in posts_data:
                 cursor.execute(
                 """INSERT INTO dev.posts (title, content, user_id) 
-                    VALUES (%s, %s, %s);""",
+                    VALUES (%s, %s, %s) RETURNING *;""",
                 (post['title'], post['content'], post["owner_id"]))
+                new_post = cursor.fetchone()
+                posts.append(new_post)
             conn.commit()
-    return True
+    # return True
+    return posts
 
 @pytest.fixture(scope="session")
 def test_max_post_id(test_posts, setup_database):
@@ -104,5 +108,27 @@ def test_max_post_id(test_posts, setup_database):
                 """SELECT MAX(id) FROM dev.posts;""")
                 max_id = cursor.fetchone()
     return max_id
+
+@pytest.fixture(scope="session")
+def testing_other_user_post(client, setup_database):
+    user_data = {"email": "bob44@example.com", "password": "password123"}
+    client.post("/users", json=user_data)
+
+    with setup_database.connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(
+                "SELECT id FROM dev.users WHERE email = 'bob44@example.com'"
+            )
+            user_id = cursor.fetchone()
+
+            cursor.execute(
+                """INSERT INTO dev.posts (title, content, user_id)
+                VALUES (%s, %s, %s) RETURNING id AS post_id;""",
+                ('Hello!', 'This is my post', user_id[0])
+            )
+            new_post_id = cursor.fetchone()
+        conn.commit()
+
+    return new_post_id
 
 
