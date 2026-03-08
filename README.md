@@ -5,6 +5,6 @@ Containers on the same Docker network communicate using the service name and int
 Docker dev environment commands
 `docker compose -f compose.test.yml up -d`
 
-`docker exec -it test_fastapi_app bash`
+`docker exec -it test_fastapi_app pytest`
 
 `docker compose -f compose.test.yml down --rmi all`
