@@ -30,6 +30,10 @@ jobs:
         with:
           compose-file: "compose.test.yml"
           down-flags: "--rmi all"
+      - name: Wait for services to be ready
+        run: |
+          docker compose ps
+          sleep 20  # Give services time to start
       - name: Execute tests in the running services
         run: docker compose exec test_fastapi_app pytest
       
