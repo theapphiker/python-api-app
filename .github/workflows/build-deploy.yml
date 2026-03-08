@@ -18,7 +18,7 @@ jobs:
           python-version: "3.13"
       - name: update pip
         run: python -m pip install --upgrade pip
-      - name:
+      - name: Run docker compose for testing
       - uses: hoverkraft-tech/compose-action@4894d2492015c1774ee5a13a95b1072093087ec3 # v2.5.0
         with:
           compose-file: "./compose.test.yml"
