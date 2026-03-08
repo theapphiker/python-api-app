@@ -5,8 +5,6 @@ services:
       dockerfile: Dockerfile.test_postgres
     container_name: test_postgres_api
     restart: always
-    volumes:
-      - test_pg_data_api:/var/lib/postgresql
     ports:
       - 5434:5432
     # change this
@@ -45,8 +43,6 @@ services:
     networks:
       - test-app-network
 
-volumes:
-  test_pg_data_api:
 networks:
   test-app-network:
     driver: bridge

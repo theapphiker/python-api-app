@@ -1,8 +1,6 @@
 CREATE DATABASE fastapi;
 
-exit
-
-psql -U admin -d fastapi
+\c fastapi
 
 CREATE SCHEMA dev;
 
@@ -34,16 +32,6 @@ BEGIN;
 ALTER TABLE dev.posts ADD COLUMN user_id INT NOT NULL;
 ALTER TABLE dev.posts ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES dev.users (id) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
-
-
-'''
-Votes model
-post_id and user_id are both foreign keys
-
-post_id and user_id must be unique combinations in the table so primary key that spans both columns
-
-users must also be able to delete posts
-'''
 
 CREATE TABLE dev.votes (
     post_id INT NOT NULL REFERENCES dev.posts(id),
