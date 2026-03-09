@@ -13,7 +13,7 @@ jobs:
     env:
       POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      URI: ${{ secrets.TEST_URI }}
+      TEST_URI: ${{ secrets.TEST_URI }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       ALGORITHM: ${{ vars.ALGORITHM }}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${{ vars.ACCESS_TOKEN_EXPIRE_MINUTES }}
@@ -26,5 +26,4 @@ jobs:
           compose-file: "compose.test.yml"
           down-flags: "-v --rmi all"
       - name: Execute tests in the running services
-        run: docker compose exec test_fastapi_app pytest
-      
+        run: docker compose -f compose.test.yml exec test_fastapi pytest
